@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, FormControl, InputLabel, Input, CircularProgress } from '@material-ui/core'
+import { Button, FormControl, InputLabel, Input } from '@material-ui/core'
 import styled from 'styled-components';
 import './App.css';
 import { Todo } from './components/Todo/Todo';
@@ -31,9 +31,7 @@ const StyledUl = styled.ul`
   @media(max-width: 699px) {
     width: 90%;
   }
-
 `
-
 
 
 function App() {
@@ -42,11 +40,18 @@ function App() {
 
   const addTodo = async (e) => {
     e.preventDefault();
-    await db.collection('todos').doc().set({
+
+    await db.collection('todos').doc().set({ 
       todo: input,
       timestamp: firebase.firestore.FieldValue.serverTimestamp()
     })
     setInput('');
+  }
+
+  const checkEnter = (e) => {
+    if(e.key === 'Enter' && input) {
+      addTodo(e)
+    }
   }
 
   useEffect(() => {
@@ -56,23 +61,23 @@ function App() {
           todo: doc.data().todo
         })))
       })
-  }, [])  
+  }, [])
+  
 
   return (
     <div className="app">
       <h1>🚀   Todos GO BRRR   🚀</h1>
-
-      <StyledFormControl className='app__fc'>
+      
+      <StyledFormControl className='app__fc' onKeyDown={checkEnter}>
         <InputLabel>✔  Write a Todo</InputLabel>
         <Input value={input} onChange={e => setInput(e.target.value)} />
         <StyledButton disabled={!input} onClick={addTodo} variant="contained" color="primary"> go bbbrrr</StyledButton>
       </StyledFormControl>
+      
       <StyledUl>
         {
-
           todos.length > 0 && 
           todos.map(todo => <Todo id={todo.id} text={todo.todo} />)
-
         }
       </StyledUl>
       

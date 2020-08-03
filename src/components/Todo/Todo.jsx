@@ -2,16 +2,27 @@ import React, { useState } from 'react';
 import './Todo.css';
 import { List, ListItem, ListItemText, Button, Modal, makeStyles, FormControl, InputLabel, Input } from '@material-ui/core';
 import styled from 'styled-components';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import db from '../../firebase/config';
 import firebase from 'firebase';
 
 
-
-
-const StyledDeleteForeverIcon = styled(DeleteForeverIcon)`
+const StyledDeleteForeverIcon = styled(DeleteIcon)`
     margin-left: 1rem;
+    color: #CCC !important;
+    transition: color ease .4s!important;
+    &:hover {
+        color: #E81224 !important;
+    }
+`
+
+const StyledEditIcon = styled(EditIcon)`
+    color: #CCC !important;
+    transition: color ease .4s!important;
+    &:hover {
+        color: #303F9F !important;
+    }
 `
 
 const StyledModal = styled(Modal)`
@@ -37,8 +48,6 @@ const StyledButton = styled(Button)`
 
 export const Todo = ({ text, id }) => {
 
-    
-
     const [open, setOpen] = useState(false)
 
     const [input, setInput] = useState('');
@@ -52,9 +61,7 @@ export const Todo = ({ text, id }) => {
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         }, {merge: true})
 
-
         setOpen(false)
-
     }
 
     return (
@@ -77,7 +84,7 @@ export const Todo = ({ text, id }) => {
             <List className='todo__list'>
                 <ListItem>
                     <ListItemText primary={text} secondary='Deadline ⏰ ' />
-                    <EditIcon  className='icon' onClick={handleOpen}  color='primary' />   
+                    <StyledEditIcon  className='icon' onClick={handleOpen}  color='primary' />   
                     <StyledDeleteForeverIcon className='icon' onClick={() => db.collection('todos').doc(id).delete()} color='primary' />
                 </ListItem>
             </List>
